@@ -4,7 +4,7 @@ import os
 
 # 1. Configuración de la página (DEBE ser el primer comando de Streamlit)
 st.set_page_config(
-    page_title="Asistente de Datos Corporativo",
+    page_title="Asistente de datos corporativo x",
     page_icon="🤖",
     layout="centered"
 )
@@ -65,7 +65,7 @@ def ejecutar_agente_adk(prompt_usuario: str) -> str:
 # ---------------------------------------------------
 
 # 5. Interfaz de Usuario
-st.title("🤖 Asistente de Datos Corporativo")
+st.title("🤖 Asistente de datos corporativo")
 st.markdown("Consulta información de la base de datos Sakila mediante lenguaje natural. El agente SQL traducirá tu petición, consultará la base de datos y te dará la respuesta.")
 
 # Inicializar la memoria de la conversación
