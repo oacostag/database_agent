@@ -4,7 +4,7 @@ import os
 
 # 1. Configuración de la página (DEBE ser el primer comando de Streamlit)
 st.set_page_config(
-    page_title="Asistente de datos corporativo x",
+    page_title="Asistente de datos corporativo",
     page_icon="🤖",
     layout="centered"
 )
