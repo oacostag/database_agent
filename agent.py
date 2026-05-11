@@ -27,7 +27,7 @@ def get_schema_info() -> str:
 
 sql_worker = Agent(
     name="SQL_Specialist",
-    model='gemini-2.5-flash,
+    model='gemini-2.5-flash',
     description="Agente experto en SQL para SQLite. Traduce lenguaje natural a SQL y ejecuta consultas.",
     instruction=f"""
     Eres un experto en SQL. Tu objetivo es obtener datos de la base de datos para responder a la solicitud.
