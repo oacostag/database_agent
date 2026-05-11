@@ -29,32 +29,33 @@ from agent import root_agent
 from google.adk.runners import InMemoryRunner
 
 # --- 4. MOTOR DE EJECUCIÓN PUENTE PARA STREAMLIT ---
+# --- 4. MOTOR DE EJECUCIÓN PUENTE PARA STREAMLIT ---
 def ejecutar_agente_adk(prompt_usuario: str) -> str:
     """
-    Envuelve la ejecución asíncrona de ADK (basada en eventos) 
-    para poder usarla en el flujo síncrono de Streamlit.
+    Envuelve la ejecución asíncrona de ADK y extrae limpiamente
+    el texto de la respuesta del LLM.
     """
     async def _run():
         # Inicializamos el Runner inyectando tu agente raíz
         runner = InMemoryRunner(agent=root_agent)
-        
-        # run_debug() ejecuta toda la cadena (root -> sql_worker -> db -> root)
-        # y devuelve una lista con la traza de todos los eventos del proceso
         eventos = await runner.run_debug(prompt_usuario)
         
         texto_final = ""
         
-        # Recorremos los eventos para extraer la respuesta definitiva del modelo
         for evento in eventos:
-            # Buscamos el evento final marcado por ADK
-            if hasattr(evento, "is_final_response") and evento.is_final_response():
-                if hasattr(evento, "text") and evento.text:
-                    texto_final = evento.text
-                elif hasattr(evento, "content"):
-                    texto_final = str(evento.content)
+            # Obtenemos el objeto content de la respuesta de ADK
+            content = getattr(evento, "content", None)
             
-            # Fallback de seguridad en caso de que is_final_response no esté presente
-            # Sobrescribe iterativamente para quedarse con el último bloque de texto generado
+            # Verificamos si es un objeto nativo de Gemini con 'parts'
+            if content and hasattr(content, "parts"):
+                # Extraemos y concatenamos solo el string de cada 'Part'
+                texto_limpio = "".join(
+                    [part.text for part in content.parts if hasattr(part, "text") and part.text]
+                )
+                if texto_limpio:
+                    texto_final = texto_limpio
+            
+            # Fallback de seguridad: si el evento tiene un texto directo
             elif hasattr(evento, "text") and evento.text:
                 texto_final = evento.text
                 
